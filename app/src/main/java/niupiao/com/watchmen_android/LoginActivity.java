@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,22 +21,24 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class LoginActivity extends ActionBarActivity {
-    public static final String LOGIN_PREFS = "LOGIN_PREFS";
     private Button mLoginButton;
     private CheckBox mRememberCheckBox;
     private EditText mIdField;
+    private EditText mPasswordField;
     private LinearLayout ll;
     private View logo;
     private ProgressBar loader;
-    private EditText mPasswordField;
     private final Context context = this;
 
 
@@ -50,6 +53,7 @@ public class LoginActivity extends ActionBarActivity {
         loader = (ProgressBar) findViewById(R.id.loading_circle);
 
         mIdField = (EditText) findViewById(R.id.username_et);
+        mPasswordField = (EditText) findViewById(R.id.password_et);
         mLoginButton = (Button) findViewById(R.id.login_button);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +77,6 @@ public class LoginActivity extends ActionBarActivity {
         if (settings.getBoolean("rememberLogin", false)) {
             mIdField.setText(settings.getString("login", ""));
             mRememberCheckBox.setChecked(settings.getBoolean("rememberLogin", false));
-            mLoginButton.callOnClick();
         }
 
     }
@@ -143,17 +146,24 @@ public class LoginActivity extends ActionBarActivity {
 
     // Create and send login request to server
     private void sendLoginRequest() {
-        String url = "https://niupiaomarket.herokuapp.com/delivery/login?format=json&key=";
-        DataSource.USER_KEY = mIdField.getText().toString();
-        url += mIdField.getText();
+        String url = "https://moresi-property-bendrews.c9.io/auth?format=json";
+        url += "&username=" + mIdField.getText();
+        url += "&password=" + mPasswordField.getText();
         // Formulate the request and handle the response.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Intent intent = new Intent(getApplicationContext(), MainTabActivity.class);
-                        //startActivity(intent);
-                        //end();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Log.d("AUTH", response.toString());
+                        try {
+                            Log.d("AUTH", response.getString("auth"));
+                            intent.putExtra("AUTH", response.getString("auth"));
+                            startActivity(intent);
+                            end();
+                        } catch(JSONException e) {
+                            Log.e("LOGIN", e.toString());
+                        }
                     }
                 },
                 new Response.ErrorListener() {
