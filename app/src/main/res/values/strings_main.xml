@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_title">LISTINGS</string>
+    <string name="no_alarms">No properties currently need to be checked</string>
+</resources>
