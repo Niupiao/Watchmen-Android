@@ -32,6 +32,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.google.zxing:core:2.2'
+    compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.embarkmobile:zxing-android-minimal:1.2.1@aar'
     compile files('libs/volley.jar')
 }
