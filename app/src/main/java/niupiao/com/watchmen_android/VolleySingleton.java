@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley;
  * Created by Ben on 6/28/2015.
  */
 public class VolleySingleton {
+    public static final String BASE_URL = "https://moresi-property-bendrews.c9.io/";
     private static VolleySingleton mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;

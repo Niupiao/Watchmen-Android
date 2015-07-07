@@ -39,7 +39,6 @@ public class LoginActivity extends ActionBarActivity {
     private LinearLayout ll;
     private View logo;
     private ProgressBar loader;
-    private final Context context = this;
 
 
     @Override
@@ -146,7 +145,8 @@ public class LoginActivity extends ActionBarActivity {
 
     // Create and send login request to server
     private void sendLoginRequest() {
-        String url = "https://moresi-property-bendrews.c9.io/auth?format=json";
+        String url = VolleySingleton.BASE_URL;
+        url += "auth?format=json";
         url += "&username=" + mIdField.getText();
         url += "&password=" + mPasswordField.getText();
         // Formulate the request and handle the response.
@@ -154,11 +154,12 @@ public class LoginActivity extends ActionBarActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), QrScannerActivity.class);
                         Log.d("AUTH", response.toString());
                         try {
                             Log.d("AUTH", response.getString("auth"));
                             intent.putExtra("AUTH", response.getString("auth"));
+                            intent.putExtra("EMPLOYEE", response.getString("employee"));
                             startActivity(intent);
                             end();
                         } catch(JSONException e) {
@@ -172,6 +173,6 @@ public class LoginActivity extends ActionBarActivity {
                         Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
-        VolleySingleton.getInstance(context).addToRequestQueue(jsonRequest);
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonRequest);
     }
 }
