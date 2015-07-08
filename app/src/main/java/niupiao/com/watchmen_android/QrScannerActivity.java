@@ -49,7 +49,7 @@ public class QrScannerActivity extends Activity implements ZBarScannerView.Resul
     }
 
     private void sendDataRequest(String qr) {
-        String url = VolleySingleton.BASE_URL;
+        String url = VolleySingleton.BASE_URL; //TODO Remove BASE_URL from VolleySingleton and change this to use Constants.
         url += "logs/new?format=json";
         url += "&employee=" + getIntent().getStringExtra("EMPLOYEE");
         url += "&auth=" + getIntent().getStringExtra("AUTH");
