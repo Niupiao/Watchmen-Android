@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.sql.Wrapper;
@@ -90,29 +92,25 @@ public class MainActivity extends ActionBarActivity {
         });
 
         VolleySingleton.getInstance(context).addToRequestQueue(request);
-        //Log.d("LIST", listings.getProperties().get(0).getLocation());
-        /*
-        setContentView(R.layout.activity_qr_scanner);
-        Toast.makeText(getApplicationContext(), getIntent().getStringExtra("AUTH"), Toast.LENGTH_LONG).show();
-        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-        intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-        startActivityForResult(intent, 0);
-        */
     }
 
     public void updateList() {
         mProperties = ListingsData.get(this).getProperties();
-        mAdapter = new PropertyAdapter(this, mProperties);
-        ArrayList<HashMap<String, String>> propertyMap = generateHashMap(mProperties);
-        SimpleAdapter adapter = new SimpleAdapter(
-                this,
-                propertyMap,
-                R.layout.list_view_property,
-                new String[]{"Normal"},
-                new int[]{R.id.tv_property}
-        );
-        ListView list = (ListView) findViewById(R.id.list);
-        list.setAdapter(adapter);
+        if(mProperties.size() > 0){
+            TextView listingsExist = (TextView) findViewById(R.id.tv_properties_to_check);
+            listingsExist.setText("");
+            mAdapter = new PropertyAdapter(this, mProperties);
+            ArrayList<HashMap<String, String>> propertyMap = generateHashMap(mProperties);
+            SimpleAdapter adapter = new SimpleAdapter(
+                    this,
+                    propertyMap,
+                    R.layout.list_view_property,
+                    new String[]{"Normal"},
+                    new int[]{R.id.tv_property}
+            );
+            ListView list = (ListView) findViewById(R.id.list);
+            list.setAdapter(adapter);
+        }
     }
 
     public ArrayList<HashMap<String, String>> generateHashMap(ArrayList<Property> props){
@@ -144,7 +142,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_qr_scanner, menu);
+        getMenuInflater().inflate(R.menu.menu_main_tab, menu);
         return true;
     }
 

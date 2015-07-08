@@ -23,9 +23,9 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="8.0dp"
-            android:padding="10.0dp"/>
+            android:divider="@drawable/listview_divider"
+            android:dividerHeight="3px"
+            />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -36,6 +36,7 @@
         android:gravity="center">
 
         <TextView
+            android:id="@+id/tv_properties_to_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
