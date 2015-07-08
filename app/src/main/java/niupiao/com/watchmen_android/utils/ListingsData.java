@@ -1,6 +1,8 @@
 package niupiao.com.watchmen_android.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -42,6 +44,10 @@ public class ListingsData {
         return sListings;
     }
 
+    public void clear(){
+        mProperties.clear();
+    }
+
     public ArrayList<Property> getProperties() { return mProperties; }
 
     public void setProperties(ArrayList<Property> list){
@@ -52,12 +58,46 @@ public class ListingsData {
         mProperties.add(prop);
     }
 
-    public static void getListingsData(String url, final Context con){
+    /*
+     * Called once in the Login Activity, getting the initial set of Listings Data and correctly
+     * synchronizing the beginning of the main activity after the listings have been created.
+     */
+    public void loginAndGetListings(String url, final Intent intent, final Activity activity){
         JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray jsonArray) {
                 Gson gson = new Gson();
-                ListingsData listings = ListingsData.get(con);
+                ListingsData listings = ListingsData.get(mAppContext);
+                for(int i = 0; i < jsonArray.length(); i++){
+                    try{
+                        JSONObject jObj = jsonArray.getJSONObject(i);
+                        Log.d("JSON", jObj.toString());
+                        Property prop = gson.fromJson(jObj.toString(), Property.class);
+                        listings.addProperty(prop);
+                    } catch (JSONException e) {
+                        Log.e("JSON Object error: ", e.toString());
+                    }
+                }
+                activity.startActivity(intent); //Start the next activity.
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(mAppContext, volleyError.toString(), Toast.LENGTH_LONG).show();
+                return;
+            }
+        });
+
+        VolleySingleton.getInstance(mAppContext).addToRequestQueue(request);
+    }
+
+    public void getListingsData(String url){
+        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                Gson gson = new Gson();
+                ListingsData listings = ListingsData.get(mAppContext);
                 for(int i = 0; i < jsonArray.length(); i++){
                     try{
                         JSONObject jObj = jsonArray.getJSONObject(i);
@@ -72,11 +112,11 @@ public class ListingsData {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(con, volleyError.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(mAppContext, volleyError.toString(), Toast.LENGTH_LONG).show();
                 return;
             }
         });
 
-        VolleySingleton.getInstance(con).addToRequestQueue(request);
+        VolleySingleton.getInstance(mAppContext).addToRequestQueue(request);
     }
 }

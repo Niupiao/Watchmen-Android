@@ -1,5 +1,8 @@
 package niupiao.com.watchmen_android.activities;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -163,8 +166,12 @@ public class LoginActivity extends ActionBarActivity {
                     public void onResponse(JSONObject response) {
                         Log.d(INTENT_KEY_FOR_AUTH, response.toString());
                         try {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             Log.d(INTENT_KEY_FOR_AUTH, response.getString("auth"));
-                            login(response);
+                            Employee employee = login(response);
+                            intent.putExtra(INTENT_KEY_FOR_EMPLOYEE, employee);
+                            updateListings(employee, intent);
+
                             finish();
                         } catch(JSONException e) {
                             Log.e("LOGIN", e.toString());
@@ -180,15 +187,17 @@ public class LoginActivity extends ActionBarActivity {
         VolleySingleton.getInstance(context).addToRequestQueue(jsonRequest);
     }
 
-    private void login(JSONObject serverResponse){
+    private Employee login(JSONObject serverResponse){
         Gson gson = new Gson();
         Employee emp = gson.fromJson(serverResponse.toString(), Employee.class);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra(INTENT_KEY_FOR_EMPLOYEE, emp);
+        return emp;
+    }
 
+    private void updateListings(Employee emp, Intent intent){
         // Update Listings with Employee Data
         String listingsURL = Constants.JsonApi.LISTINGS_URL + "employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
-        ListingsData.getListingsData(listingsURL, getApplicationContext());
-        startActivity(intent);
+        ListingsData listings = ListingsData.get(getApplicationContext());
+        listings.clear();
+        listings.loginAndGetListings(listingsURL, intent, this);
     }
 }

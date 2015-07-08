@@ -42,6 +42,7 @@ public class ListingsFragment extends ListFragment {
     public ArrayList<Property> mProperties;
     public PropertyAdapter mAdapter;
     private Employee emp;
+    private View view;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -49,7 +50,7 @@ public class ListingsFragment extends ListFragment {
 
         Bundle bundle = getArguments();
         emp = (Employee) bundle.get("emp");
-        mProperties = ListingsData.get(getActivity()).getProperties();
+        mProperties = ListingsData.get(getActivity().getApplicationContext()).getProperties();
         updateList();
     }
 
@@ -60,16 +61,17 @@ public class ListingsFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_listings, container, false);
+        view = inflater.inflate(R.layout.fragment_listings, container, false);
 
-        return v;
+        return view;
     }
 
     public void updateList() {
-        mProperties = ListingsData.get(getActivity()).getProperties();
+        mProperties = ListingsData.get(getActivity().getApplicationContext()).getProperties();
         if(mProperties.size() > 0){
-            TextView listingsExist = (TextView) getActivity().findViewById(R.id.tv_properties_to_check);
-            listingsExist.setText("");
+            Log.d("TEST", mProperties.get(0).getLocation());
+            //TextView listingsExist = (TextView) view.findViewById(R.id.tv_properties_to_check);
+            //listingsExist.setText("");
             mAdapter = new PropertyAdapter(getActivity(), mProperties);
             ArrayList<HashMap<String, String>> propertyMap = generateHashMap(mProperties);
             SimpleAdapter adapter = new SimpleAdapter(
@@ -79,7 +81,7 @@ public class ListingsFragment extends ListFragment {
                     new String[]{"Normal"},
                     new int[]{R.id.tv_property}
             );
-            ListView list = (ListView) getActivity().findViewById(android.R.id.list);
+            ListView list = (ListView) view.findViewById(android.R.id.list);
             list.setAdapter(adapter);
         }
     }
