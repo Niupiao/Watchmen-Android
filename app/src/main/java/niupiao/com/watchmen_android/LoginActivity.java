@@ -1,5 +1,6 @@
 package niupiao.com.watchmen_android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,11 +15,11 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
@@ -38,8 +39,7 @@ public class LoginActivity extends ActionBarActivity {
     private EditText mPasswordField;
     private LinearLayout ll;
     private View logo;
-    private ProgressBar loader;
-    private final Context context = this;
+    private LinearLayout loader;
 
 
     @Override
@@ -50,14 +50,19 @@ public class LoginActivity extends ActionBarActivity {
 
         ll = (LinearLayout) findViewById(R.id.sliding_ll);
         logo = findViewById(R.id.image);
-        loader = (ProgressBar) findViewById(R.id.loading_circle);
-
+        loader = (LinearLayout) findViewById(R.id.loading_circle);
         mIdField = (EditText) findViewById(R.id.username_et);
         mPasswordField = (EditText) findViewById(R.id.password_et);
         mLoginButton = (Button) findViewById(R.id.login_button);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 startLoginAnimation();
 
                 // Delayed start
@@ -67,7 +72,7 @@ public class LoginActivity extends ActionBarActivity {
                     public void run() {
                         sendLoginRequest();
                     }
-                }, 500);
+                }, 1900);
             }
         });
 
@@ -76,6 +81,7 @@ public class LoginActivity extends ActionBarActivity {
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         if (settings.getBoolean("rememberLogin", false)) {
             mIdField.setText(settings.getString("login", ""));
+            mPasswordField.requestFocus();
             mRememberCheckBox.setChecked(settings.getBoolean("rememberLogin", false));
         }
 
@@ -117,20 +123,20 @@ public class LoginActivity extends ActionBarActivity {
         editor.commit();
     }
 
-    // Move views
     private void startLoginAnimation() {
         // Transition to loading animation
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setDuration(500);
+        fadeOut.setDuration(400);
         fadeOut.setFillAfter(true);
         ll.startAnimation(fadeOut);
         ll.setVisibility(View.GONE);
 
+        // Fade in loader
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new AccelerateInterpolator());
-        fadeIn.setDuration(100);
-        fadeIn.setStartOffset(900);
+        fadeIn.setDuration(300);
+        fadeIn.setStartOffset(300);
         fadeIn.setFillAfter(true);
         loader.startAnimation(fadeIn);
         loader.setVisibility(View.VISIBLE);
@@ -138,15 +144,46 @@ public class LoginActivity extends ActionBarActivity {
         // Move logo down
         Animation moveDown = new TranslateAnimation(0, 0, 0, 200);
         moveDown.setDuration(600);
-        moveDown.setStartOffset(800);
+        moveDown.setStartOffset(200);
         moveDown.setInterpolator(new DecelerateInterpolator());
         moveDown.setFillAfter(true);
         logo.startAnimation(moveDown);
     }
 
+    // Reverse prior animation
+    private void returnToLogin() {
+
+        // Fade out loader
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setDuration(150);
+        fadeOut.setFillAfter(true);
+        loader.clearAnimation();
+        loader.startAnimation(fadeOut);
+        loader.setVisibility(View.GONE);
+
+        // Move logo up
+        Animation moveUp = new TranslateAnimation(0, 0, 200, 0);
+        moveUp.setDuration(600);
+        moveUp.setStartOffset(200);
+        moveUp.setInterpolator(new DecelerateInterpolator());
+        moveUp.setFillAfter(true);
+        logo.startAnimation(moveUp);
+
+        // Fade textviews in
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new AccelerateInterpolator());
+        fadeIn.setStartOffset(300);
+        fadeIn.setDuration(500);
+        fadeIn.setFillAfter(true);
+        ll.startAnimation(fadeIn);
+        ll.setVisibility(View.VISIBLE);
+    }
+
     // Create and send login request to server
     private void sendLoginRequest() {
-        String url = "https://moresi-property-bendrews.c9.io/auth?format=json";
+        String url = VolleySingleton.BASE_URL;
+        url += "auth?format=json";
         url += "&username=" + mIdField.getText();
         url += "&password=" + mPasswordField.getText();
         // Formulate the request and handle the response.
@@ -154,15 +191,23 @@ public class LoginActivity extends ActionBarActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), QrScannerActivity.class);
                         Log.d("AUTH", response.toString());
                         try {
-                            Log.d("AUTH", response.getString("auth"));
-                            intent.putExtra("AUTH", response.getString("auth"));
-                            startActivity(intent);
-                            end();
+
+                                intent.putExtra("AUTH", response.getString("auth"));
+                                intent.putExtra("EMPLOYEE", response.getString("employee"));
+                                startActivity(intent);
+                                end();
                         } catch(JSONException e) {
-                            Log.e("LOGIN", e.toString());
+                            try {
+                                Toast.makeText(getApplicationContext(), response.getString("error"), Toast.LENGTH_LONG).show();
+                                returnToLogin();
+                            }
+                            catch (JSONException f) {
+                                Toast.makeText(getApplicationContext(), f.toString(), Toast.LENGTH_LONG).show();
+                                returnToLogin();
+                            }
                         }
                     }
                 },
@@ -170,8 +215,9 @@ public class LoginActivity extends ActionBarActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                        returnToLogin();
                     }
                 });
-        VolleySingleton.getInstance(context).addToRequestQueue(jsonRequest);
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonRequest);
     }
 }

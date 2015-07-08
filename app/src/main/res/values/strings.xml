@@ -4,5 +4,8 @@
     <string name="action_settings">Settings</string>
 
     <string name="login_remember">Remember Me</string>
+    <string name="login_button">Login</string>
+
     <string name="title_activity_qr_scanner">QrScannerActivity</string>
+    <string name="title_activity_qr_viewer">QrViewerActivity</string>
 </resources>

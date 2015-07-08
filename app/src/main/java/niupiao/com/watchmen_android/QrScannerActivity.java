@@ -1,29 +1,82 @@
 package niupiao.com.watchmen_android;
 
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Surface;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.google.zxing.Result;
-import com.google.zxing.client.android.CaptureActivity;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import me.dm7.barcodescanner.zbar.Result;
+import niupiao.com.watchmen_android.ZBar.ZBarScannerView;
 
 
-public class QrScannerActivity extends CaptureActivity {
+public class QrScannerActivity extends Activity implements ZBarScannerView.ResultHandler{
+    private ZBarScannerView mScannerView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qr_scanner);
+    public void onCreate(Bundle state) {
+        super.onCreate(state);
+        mScannerView = new ZBarScannerView(this);    // Programmatically initialize the scanner view
+        setContentView(mScannerView);                // Set the scanner view as the content view
     }
 
     @Override
-    public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
-        Toast.makeText(this.getApplicationContext(), "Scanned code " + rawResult.getText(), Toast.LENGTH_LONG).show();
+    public void onResume() {
+        super.onResume();
+        mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+        mScannerView.startCamera();          // Start camera on resume
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mScannerView.stopCamera();           // Stop camera on pause
+    }
+
+    @Override
+    public void handleResult(Result rawResult) {
+        // Do something with the result here
+        Log.v("QrScanner", rawResult.getContents()); // Prints scan results
+        sendDataRequest(rawResult.getContents());
+    }
+
+    private void sendDataRequest(String qr) {
+        String url = VolleySingleton.BASE_URL; //TODO Remove BASE_URL from VolleySingleton and change this to use Constants.
+        url += "logs/new?format=json";
+        url += "&employee=" + getIntent().getStringExtra("EMPLOYEE");
+        url += "&auth=" + getIntent().getStringExtra("AUTH");
+        url += "&qr=" + qr;
+        // Formulate the request and handle the response.
+        Log.v("QrScanner", url);
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Intent intent = new Intent(getApplicationContext(), QrViewerActivity.class);
+                        try {
+                            intent.putExtra("PROPERTY", response.getString("property"));
+                            intent.putExtra("LOCATION", response.getString("location"));
+                            intent.putExtra("CONTENT", response.getString("content"));
+                            startActivity(intent);
+                        } catch(JSONException e) {
+                            Log.e("LOGIN", e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonRequest);
+    }
 }

@@ -16,9 +16,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_scanner);
         Toast.makeText(getApplicationContext(), getIntent().getStringExtra("AUTH"), Toast.LENGTH_LONG).show();
-        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-        intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-        startActivityForResult(intent, 0);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
