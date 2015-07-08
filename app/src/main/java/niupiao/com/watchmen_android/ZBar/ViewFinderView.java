@@ -1,4 +1,4 @@
-package niupiao.com.watchmen_android;
+package niupiao.com.watchmen_android.ZBar;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import me.dm7.barcodescanner.core.DisplayUtils;
+import niupiao.com.watchmen_android.R;
 
 import static niupiao.com.watchmen_android.R.integer.viewfinder_border_length;
 import static niupiao.com.watchmen_android.R.integer.viewfinder_border_width;
@@ -60,31 +61,14 @@ public class ViewFinderView extends View {
         if(mFramingRect == null) {
             return;
         }
-
-        drawViewFinderMask(canvas);
         drawViewFinderBorder(canvas);
-        drawLaser(canvas);
-    }
-
-    public void drawViewFinderMask(Canvas canvas) {
-       /* Paint paint = new Paint();
-        Resources resources = getResources();
-        paint.setColor(resources.getColor(R.color.viewfinder_mask));
-
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
-
-        canvas.drawRect(0, 0, width, mFramingRect.top, paint);
-        canvas.drawRect(0, mFramingRect.top, mFramingRect.left, mFramingRect.bottom + 1, paint);
-        canvas.drawRect(mFramingRect.right + 1, mFramingRect.top, width, mFramingRect.bottom + 1, paint);
-        canvas.drawRect(0, mFramingRect.bottom + 1, width, height, paint);*/
     }
 
     public void drawViewFinderBorder(Canvas canvas) {
         Paint paint = new Paint();
         Resources resources = getResources();
         paint.setColor(resources.getColor(R.color.ColorTransparentWhite));
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(40 + resources.getInteger(viewfinder_border_width));
 
         /*canvas.drawLine(mFramingRect.left - 1, mFramingRect.top - 1, mFramingRect.left - 1, mFramingRect.top - 1 + lineLength, paint);
@@ -100,28 +84,24 @@ public class ViewFinderView extends View {
         canvas.drawLine(mFramingRect.right + 1, mFramingRect.bottom + 1, mFramingRect.right + 1 - lineLength, mFramingRect.bottom + 1, paint);*/
 
         //Top Left
-        /*canvas.drawRect(mFramingRect.left, mFramingRect.top + 10, mFramingRect.left + 10, mFramingRect.top + lineLength, paint);
-        canvas.drawRect(mFramingRect.left + 10, mFramingRect.top, mFramingRect.left + lineLength, mFramingRect.top + 10, paint);
-        canvas.drawArc(mFramingRect.left, mFramingRect.top, mFramingRect.left + 20, mFramingRect.top + 20, 180, 90, true, paint);*/
-        canvas.drawRoundRect(mFramingRect.left, mFramingRect.top, mFramingRect.right, mFramingRect.bottom, 20, 20, paint);
-    }
+        canvas.drawRect(mFramingRect.left, mFramingRect.top + 75, mFramingRect.left + 75, mFramingRect.top + 250, paint);
+        canvas.drawRect(mFramingRect.left + 75, mFramingRect.top, mFramingRect.left + 250, mFramingRect.top + 75, paint);
+        canvas.drawArc(mFramingRect.left, mFramingRect.top, mFramingRect.left + 150, mFramingRect.top + 150, 180, 90, true, paint);
 
-    public void drawLaser(Canvas canvas) {
-      /*  Paint paint = new Paint();
-        Resources resources = getResources();
-        // Draw a red "laser scanner" line through the middle to show decoding is active
-        paint.setColor(resources.getColor(R.color.viewfinder_laser));
-        paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
-        paint.setStyle(Paint.Style.FILL);
-        scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
-        int middle = mFramingRect.height() / 2 + mFramingRect.top;
-        canvas.drawRect(mFramingRect.left + 2, middle - 1, mFramingRect.right - 1, middle + 2, paint);
+        //Top Right
+        canvas.drawRect(mFramingRect.right - 75, mFramingRect.top + 75, mFramingRect.right, mFramingRect.top + 250, paint);
+        canvas.drawRect(mFramingRect.right - 250, mFramingRect.top, mFramingRect.right - 75, mFramingRect.top + 75, paint);
+        canvas.drawArc(mFramingRect.right - 150, mFramingRect.top, mFramingRect.right, mFramingRect.top + 150, 270, 90, true, paint);
 
-        postInvalidateDelayed(ANIMATION_DELAY,
-                mFramingRect.left - POINT_SIZE,
-                mFramingRect.top - POINT_SIZE,
-                mFramingRect.right + POINT_SIZE,
-                mFramingRect.bottom + POINT_SIZE);*/
+        //Bottom Left
+        canvas.drawRect(mFramingRect.left, mFramingRect.bottom - 250, mFramingRect.left + 75, mFramingRect.bottom - 75, paint);
+        canvas.drawRect(mFramingRect.left + 75, mFramingRect.bottom - 75, mFramingRect.left + 250, mFramingRect.bottom, paint);
+        canvas.drawArc(mFramingRect.left, mFramingRect.bottom - 150, mFramingRect.left + 150, mFramingRect.bottom, 90, 90, true, paint);
+
+        //Bottom Right
+        canvas.drawRect(mFramingRect.right - 75, mFramingRect.bottom - 250, mFramingRect.right, mFramingRect.bottom - 75, paint);
+        canvas.drawRect(mFramingRect.right - 250, mFramingRect.bottom - 75, mFramingRect.right - 75, mFramingRect.bottom , paint);
+        canvas.drawArc(mFramingRect.right - 150, mFramingRect.bottom - 150, mFramingRect.right, mFramingRect.bottom, 0, 90, true, paint);
     }
 
     @Override
@@ -140,10 +120,10 @@ public class ViewFinderView extends View {
 
         if(orientation != Configuration.ORIENTATION_PORTRAIT) {
             width = findDesiredDimensionInRange(LANDSCAPE_WIDTH_RATIO, viewResolution.x, MIN_FRAME_WIDTH, LANDSCAPE_MAX_FRAME_WIDTH);
-            height = findDesiredDimensionInRange(LANDSCAPE_HEIGHT_RATIO, viewResolution.y, MIN_FRAME_HEIGHT, LANDSCAPE_MAX_FRAME_HEIGHT);
+            height = width;
         } else {
-            width = findDesiredDimensionInRange(PORTRAIT_WIDTH_RATIO, viewResolution.x, MIN_FRAME_WIDTH, PORTRAIT_MAX_FRAME_WIDTH);
             height = findDesiredDimensionInRange(PORTRAIT_HEIGHT_RATIO, viewResolution.y, MIN_FRAME_HEIGHT, PORTRAIT_MAX_FRAME_HEIGHT);
+            width = height;
         }
 
         int leftOffset = (viewResolution.x - width) / 2;

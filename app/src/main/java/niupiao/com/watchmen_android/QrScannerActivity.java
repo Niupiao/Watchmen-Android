@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.dm7.barcodescanner.zbar.Result;
+import niupiao.com.watchmen_android.ZBar.ZBarScannerView;
 
 
 public class QrScannerActivity extends Activity implements ZBarScannerView.ResultHandler{
@@ -61,6 +62,7 @@ public class QrScannerActivity extends Activity implements ZBarScannerView.Resul
                     public void onResponse(JSONObject response) {
                         Intent intent = new Intent(getApplicationContext(), QrViewerActivity.class);
                         try {
+                            intent.putExtra("PROPERTY", response.getString("property"));
                             intent.putExtra("LOCATION", response.getString("location"));
                             intent.putExtra("CONTENT", response.getString("content"));
                             startActivity(intent);

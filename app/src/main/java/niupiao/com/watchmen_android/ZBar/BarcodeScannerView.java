@@ -1,4 +1,4 @@
-package niupiao.com.watchmen_android;
+package niupiao.com.watchmen_android.ZBar;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 
 import me.dm7.barcodescanner.core.CameraPreview;
 import me.dm7.barcodescanner.core.CameraUtils;
+import niupiao.com.watchmen_android.ZBar.ViewFinderView;
 
 public abstract class BarcodeScannerView extends FrameLayout implements Camera.PreviewCallback  {
     private Camera mCamera;

@@ -12,24 +12,20 @@ import org.w3c.dom.Text;
 
 public class QrViewerActivity extends ActionBarActivity {
 
-    private TextView mLocationView;
     private TextView mContentView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_viewer);
-        mLocationView = (TextView)findViewById(R.id.location_view);
         mContentView = (TextView)findViewById(R.id.content_view);
+        getSupportActionBar().setTitle(getIntent().getStringExtra("LOCATION"));
 
-        mLocationView.setText("Location: " + getIntent().getStringExtra("LOCATION"));
-        mContentView.setText("Content: " + getIntent().getStringExtra("CONTENT"));
+        mContentView.setText(getIntent().getStringExtra("CONTENT"));
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_qr_viewer, menu);
         return true;
     }
 
