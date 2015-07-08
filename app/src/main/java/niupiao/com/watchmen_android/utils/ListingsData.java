@@ -1,9 +1,21 @@
 package niupiao.com.watchmen_android.utils;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import niupiao.com.watchmen_android.VolleySingleton;
 import niupiao.com.watchmen_android.models.Property;
 
 /**
@@ -38,5 +50,33 @@ public class ListingsData {
 
     public void addProperty(Property prop) {
         mProperties.add(prop);
+    }
+
+    public static void getListingsData(String url, final Context con){
+        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                Gson gson = new Gson();
+                ListingsData listings = ListingsData.get(con);
+                for(int i = 0; i < jsonArray.length(); i++){
+                    try{
+                        JSONObject jObj = jsonArray.getJSONObject(i);
+                        Log.d("JSON", jObj.toString());
+                        Property prop = gson.fromJson(jObj.toString(), Property.class);
+                        listings.addProperty(prop);
+                    } catch (JSONException e) {
+                        Log.e("JSON Object error: ", e.toString());
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(con, volleyError.toString(), Toast.LENGTH_LONG).show();
+                return;
+            }
+        });
+
+        VolleySingleton.getInstance(con).addToRequestQueue(request);
     }
 }

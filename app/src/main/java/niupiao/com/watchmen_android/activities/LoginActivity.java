@@ -36,6 +36,7 @@ import niupiao.com.watchmen_android.Constants;
 import niupiao.com.watchmen_android.R;
 import niupiao.com.watchmen_android.VolleySingleton;
 import niupiao.com.watchmen_android.models.Employee;
+import niupiao.com.watchmen_android.utils.ListingsData;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -89,10 +90,6 @@ public class LoginActivity extends ActionBarActivity {
             mRememberCheckBox.setChecked(settings.getBoolean("rememberLogin", false));
         }
 
-    }
-
-    private void end() {
-        finish();
     }
 
     @Override
@@ -168,7 +165,7 @@ public class LoginActivity extends ActionBarActivity {
                         try {
                             Log.d(INTENT_KEY_FOR_AUTH, response.getString("auth"));
                             login(response);
-                            end();
+                            finish();
                         } catch(JSONException e) {
                             Log.e("LOGIN", e.toString());
                         }
@@ -188,6 +185,10 @@ public class LoginActivity extends ActionBarActivity {
         Employee emp = gson.fromJson(serverResponse.toString(), Employee.class);
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra(INTENT_KEY_FOR_EMPLOYEE, emp);
+
+        // Update Listings with Employee Data
+        String listingsURL = Constants.JsonApi.LISTINGS_URL + "employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
+        ListingsData.getListingsData(listingsURL, getApplicationContext());
         startActivity(intent);
     }
 }
