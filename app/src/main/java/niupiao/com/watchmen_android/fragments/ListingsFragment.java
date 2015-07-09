@@ -51,7 +51,6 @@ public class ListingsFragment extends ListFragment {
         Bundle bundle = getArguments();
         emp = (Employee) bundle.get("emp");
         mProperties = ListingsData.get(getActivity().getApplicationContext()).getProperties();
-        updateList();
     }
 
     @Override
@@ -63,6 +62,7 @@ public class ListingsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.fragment_listings, container, false);
 
+        updateList();
         return view;
     }
 
