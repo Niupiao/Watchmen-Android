@@ -1,4 +1,4 @@
-package niupiao.com.watchmen_android;
+package niupiao.com.watchmen_android.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.dm7.barcodescanner.zbar.Result;
+import niupiao.com.watchmen_android.utils.VolleySingleton;
 import niupiao.com.watchmen_android.ZBar.ZBarScannerView;
 
 

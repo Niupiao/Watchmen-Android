@@ -5,4 +5,43 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Main"></style>
+
+    <style name="Main.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="Main.TextView.Title">
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Main.TextView.Circle">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/listings_circle</item>
+    </style>
+
+    <style name="Main.TextView.Property">
+        <item name="android:textSize">21sp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="Main.ImageButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Main.ImageButton.Scanner">
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:src">@drawable/camera_50</item>
+    </style>
 </resources>

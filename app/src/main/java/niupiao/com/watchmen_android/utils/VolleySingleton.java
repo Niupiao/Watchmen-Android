@@ -1,4 +1,4 @@
-package niupiao.com.watchmen_android;
+package niupiao.com.watchmen_android.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

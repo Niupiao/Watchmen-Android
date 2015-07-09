@@ -1,8 +1,8 @@
-package niupiao.com.watchmen_android;
+package niupiao.com.watchmen_android.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -27,9 +27,17 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.appdatasearch.GetRecentContextCall;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import niupiao.com.watchmen_android.Constants;
+import niupiao.com.watchmen_android.R;
+import niupiao.com.watchmen_android.utils.VolleySingleton;
+import niupiao.com.watchmen_android.models.Employee;
+import niupiao.com.watchmen_android.utils.ListingsData;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -40,6 +48,9 @@ public class LoginActivity extends ActionBarActivity {
     private LinearLayout ll;
     private View logo;
     private LinearLayout loader;
+
+    private final String INTENT_KEY_FOR_EMPLOYEE = "employee";
+    private final String INTENT_KEY_FOR_AUTH = "auth";
 
 
     @Override
@@ -85,10 +96,6 @@ public class LoginActivity extends ActionBarActivity {
             mRememberCheckBox.setChecked(settings.getBoolean("rememberLogin", false));
         }
 
-    }
-
-    private void end() {
-        finish();
     }
 
     @Override
@@ -182,8 +189,8 @@ public class LoginActivity extends ActionBarActivity {
 
     // Create and send login request to server
     private void sendLoginRequest() {
-        String url = VolleySingleton.BASE_URL;
-        url += "auth?format=json";
+
+        String url = Constants.JsonApi.LOGIN_URL;
         url += "&username=" + mIdField.getText();
         url += "&password=" + mPasswordField.getText();
         // Formulate the request and handle the response.
@@ -191,14 +198,16 @@ public class LoginActivity extends ActionBarActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Intent intent = new Intent(getApplicationContext(), QrScannerActivity.class);
-                        Log.d("AUTH", response.toString());
-                        try {
 
-                                intent.putExtra("AUTH", response.getString("auth"));
-                                intent.putExtra("EMPLOYEE", response.getString("employee"));
-                                startActivity(intent);
-                                end();
+                        Log.d(INTENT_KEY_FOR_AUTH, response.toString());
+                        try {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Employee employee = login(response);
+                            intent.putExtra(INTENT_KEY_FOR_EMPLOYEE, employee);
+                            intent.putExtra(INTENT_KEY_FOR_AUTH, response.getString("auth"));
+                            updateListings(employee, intent);
+
+                            finish();
                         } catch(JSONException e) {
                             try {
                                 Toast.makeText(getApplicationContext(), response.getString("error"), Toast.LENGTH_LONG).show();
@@ -219,5 +228,19 @@ public class LoginActivity extends ActionBarActivity {
                     }
                 });
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonRequest);
+    }
+
+    private Employee login(JSONObject serverResponse){
+        Gson gson = new Gson();
+        Employee emp = gson.fromJson(serverResponse.toString(), Employee.class);
+        return emp;
+    }
+
+    private void updateListings(Employee emp, Intent intent){
+        // Update Listings with Employee Data
+        String listingsURL = Constants.JsonApi.LISTINGS_URL + "employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
+        ListingsData listings = ListingsData.get(getApplicationContext());
+        listings.clear();
+        listings.loginAndGetListings(listingsURL, intent, this);
     }
 }

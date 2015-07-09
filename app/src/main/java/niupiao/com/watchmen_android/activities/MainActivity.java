@@ -1,21 +1,43 @@
-package niupiao.com.watchmen_android;
+package niupiao.com.watchmen_android.activities;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
+
+import niupiao.com.watchmen_android.R;
+import niupiao.com.watchmen_android.fragments.ListingsFragment;
+import niupiao.com.watchmen_android.models.Employee;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private final String INTENT_KEY_FOR_EMPLOYEE = "employee";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qr_scanner);
-        Toast.makeText(getApplicationContext(), getIntent().getStringExtra("AUTH"), Toast.LENGTH_LONG).show();
+        setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        Employee emp = intent.getParcelableExtra(INTENT_KEY_FOR_EMPLOYEE);
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ListingsFragment frag = new ListingsFragment();
+        Bundle listingBundle = new Bundle();
+        listingBundle.putParcelable("emp", emp);
+        frag.setArguments(listingBundle);
+        ft.add(R.id.fl_listings_container, frag);
+        ft.commit();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -34,20 +56,19 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-
-
-        @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_qr_scanner, menu);
+        getMenuInflater().inflate(R.menu.menu_main_tab, menu);
         return true;
     }
 
+
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
