@@ -66,12 +66,12 @@ public class ListingsData {
         JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray jsonArray) {
+                Log.d("RESPONSE", jsonArray.toString());
                 Gson gson = new Gson();
                 ListingsData listings = ListingsData.get(mAppContext);
                 for(int i = 0; i < jsonArray.length(); i++){
                     try{
                         JSONObject jObj = jsonArray.getJSONObject(i);
-                        Log.d("JSON", jObj.toString());
                         Property prop = gson.fromJson(jObj.toString(), Property.class);
                         listings.addProperty(prop);
                     } catch (JSONException e) {

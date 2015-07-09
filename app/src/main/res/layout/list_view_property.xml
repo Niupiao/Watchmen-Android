@@ -10,12 +10,10 @@
     <TextView
         android:id="@+id/tv_task_circle"
         style="@style/Main.TextView.Circle"
-        android:text="10"
         />
 
     <TextView
         android:id="@+id/tv_property"
-        android:text="test"
         android:layout_toRightOf="@id/tv_task_circle"
         style="@style/Main.TextView.Property"
         />

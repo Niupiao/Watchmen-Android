@@ -79,17 +79,16 @@ public class ListingsFragment extends ListFragment {
     public void updateView() {
         mProperties = ListingsData.get(getActivity().getApplicationContext()).getProperties();
         if(mProperties.size() > 0){
-            Log.d("TEST", mProperties.get(0).getLocation());
-            //TextView listingsExist = (TextView) view.findViewById(R.id.tv_properties_to_check);
-            //listingsExist.setText("");
+            TextView listingsExist = (TextView) view.findViewById(R.id.tv_properties_to_check);
+            listingsExist.setText("");
             mAdapter = new PropertyAdapter(getActivity(), mProperties);
             ArrayList<HashMap<String, String>> propertyMap = generateHashMap(mProperties);
             SimpleAdapter adapter = new SimpleAdapter(
                     getActivity(),
                     propertyMap,
                     R.layout.list_view_property,
-                    new String[]{"Normal"},
-                    new int[]{R.id.tv_property}
+                    new String[]{"Property", "Task"},
+                    new int[]{R.id.tv_property, R.id.tv_task_circle}
             );
             ListView list = (ListView) view.findViewById(android.R.id.list);
             list.setAdapter(adapter);
@@ -100,7 +99,8 @@ public class ListingsFragment extends ListFragment {
         ArrayList<HashMap<String, String>> propertyMaps = new ArrayList<HashMap<String, String>>();
         for (Property prop : props){
             HashMap<String, String> map = new HashMap<>();
-            map.put("Normal", prop.getLocation());
+            map.put("Property", prop.getName());
+            map.put("Task", prop.getTasks().size() + "");
             propertyMaps.add(map);
         }
         return propertyMaps;

@@ -3,8 +3,6 @@ package niupiao.com.watchmen_android.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
 /**
  * Created by Inanity on 7/6/2015.
  */
@@ -12,11 +10,12 @@ import java.util.ArrayList;
 /*
  * Property model for Gson interpretation. Stores the QR Code information for listings.
  */
-public class Property implements Parcelable {
+public class QRCode implements Parcelable {
     private int id;
-    private String name;
+    private String location;
+    private String content;
     private int company_id;
-    private ArrayList<Task> tasks;
+    private int property_id;
 
     @Override
     public int describeContents() { return 0; }
@@ -24,58 +23,59 @@ public class Property implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags){
         dest.writeInt(id);
-        dest.writeString(name);
+        dest.writeString(location);
+        dest.writeString(content);
         dest.writeInt(company_id);
-        dest.writeList(tasks);
+        dest.writeInt(property_id);
     }
 
-    public Property(Parcel in){
+    public QRCode(Parcel in){
         id = in.readInt();
-        name = in.readString();
+        location = in.readString();
+        content = in.readString();
         company_id = in.readInt();
-        tasks = new ArrayList<Task>();
-        in.readList(tasks, Task.class.getClassLoader());
+        property_id = in.readInt();
     }
 
     public void setID(int i){
         id = i;
     }
 
-    public void setName(String t){
-        name = t;
+    public void setLocation(String t){
+        location = t;
     }
+
+    public void setContent(String t){ content = t; }
 
     public void setCompany(int id){
         company_id = id;
     }
 
-    public void setTasks(ArrayList<Task> tasks) { this.tasks = tasks; }
+    public void setProperty(int id){ property_id = id; }
 
     public int getID(){
         return id;
     }
 
-    public String getName(){
-        return name;
+    public String getLocation(){
+        return location;
     }
+
+    public String getContent(){ return content; }
 
     public int getCompanyID(){
         return company_id;
     }
 
-    public ArrayList<Task> getTasks(){
-        if(tasks == null)
-            tasks = new ArrayList<Task>();
-        return tasks;
-    }
+    public int getPropertyID(){ return property_id; }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator(){
-        public Property createFromParcel(Parcel in){
-            return new Property(in);
+        public QRCode createFromParcel(Parcel in){
+            return new QRCode(in);
         }
 
-        public Property[] newArray(int size){
-            return new Property[size];
+        public QRCode[] newArray(int size){
+            return new QRCode[size];
         }
     };
 }

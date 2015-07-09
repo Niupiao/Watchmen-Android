@@ -28,7 +28,7 @@ public class PropertyAdapter extends ArrayAdapter<Property> {
 
         Property prop = getItem(position);
         TextView propLoc = (TextView) convertView.findViewById(R.id.tv_property);
-        propLoc.setText(prop.getLocation());
+        propLoc.setText(prop.getName());
 
         return convertView;
     }
