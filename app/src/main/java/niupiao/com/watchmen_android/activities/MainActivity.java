@@ -50,10 +50,7 @@ import niupiao.com.watchmen_android.utils.ListingsData;
 
 public class MainActivity extends ActionBarActivity {
 
-    public ArrayList<Property> mProperties;
-
     private final String INTENT_KEY_FOR_EMPLOYEE = "employee";
-    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +59,6 @@ public class MainActivity extends ActionBarActivity {
 
         Intent intent = getIntent();
         Employee emp = intent.getParcelableExtra(INTENT_KEY_FOR_EMPLOYEE);
-
-        String url = Constants.JsonApi.LISTINGS_URL + "employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();

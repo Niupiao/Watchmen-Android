@@ -62,11 +62,21 @@ public class ListingsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.fragment_listings, container, false);
 
-        updateList();
+        // Refresh list on swipe down
+        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_listings_view);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateListings(true);
+                Toast.makeText(getActivity(), "Refreshed Listings", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        updateView();
         return view;
     }
 
-    public void updateList() {
+    public void updateView() {
         mProperties = ListingsData.get(getActivity().getApplicationContext()).getProperties();
         if(mProperties.size() > 0){
             Log.d("TEST", mProperties.get(0).getLocation());
@@ -115,8 +125,8 @@ public class ListingsFragment extends ListFragment {
                     }
                 }
 
-                updateList();
-                //((SwipeRefreshLayout) getView().findViewById(R.id.refresh_listings_view)).setRefreshing(false);
+                updateView();
+                ((SwipeRefreshLayout) getView().findViewById(R.id.refresh_listings_view)).setRefreshing(false);
             }
 
         }, new Response.ErrorListener() {
