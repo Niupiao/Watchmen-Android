@@ -8,13 +8,13 @@
     >
 
     <TextView
-        android:id="@+id/tv_task_circle"
-        style="@style/Main.TextView.Circle"
+        android:id="@+id/tv_task_square"
+        style="@style/Main.TextView.Square"
         />
 
     <TextView
         android:id="@+id/tv_property"
-        android:layout_toRightOf="@id/tv_task_circle"
+        android:layout_toRightOf="@id/tv_task_square"
         style="@style/Main.TextView.Property"
         />
 

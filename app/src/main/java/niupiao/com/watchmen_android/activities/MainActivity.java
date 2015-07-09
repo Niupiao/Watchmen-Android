@@ -26,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Watchmen");
 
         Intent intent = getIntent();
         Employee emp = intent.getParcelableExtra(INTENT_KEY_FOR_EMPLOYEE);

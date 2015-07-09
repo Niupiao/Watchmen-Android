@@ -1,12 +1,14 @@
 package niupiao.com.watchmen_android.fragments;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 
 import niupiao.com.watchmen_android.Constants;
 import niupiao.com.watchmen_android.R;
+import niupiao.com.watchmen_android.activities.QrScannerActivity;
 import niupiao.com.watchmen_android.utils.VolleySingleton;
 import niupiao.com.watchmen_android.adapters.PropertyAdapter;
 import niupiao.com.watchmen_android.models.Employee;
@@ -42,6 +45,7 @@ public class ListingsFragment extends ListFragment {
     public PropertyAdapter mAdapter;
     private Employee emp;
     private View view;
+    private ImageButton mScannerButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -71,6 +75,15 @@ public class ListingsFragment extends ListFragment {
             }
         });
 
+        mScannerButton = (ImageButton)view.findViewById(R.id.ib_scanner);
+        mScannerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), QrScannerActivity.class);
+                startActivity(intent);
+            }
+        });
+
         updateView();
         return view;
     }
@@ -87,7 +100,7 @@ public class ListingsFragment extends ListFragment {
                     propertyMap,
                     R.layout.list_view_property,
                     new String[]{"Property", "Task"},
-                    new int[]{R.id.tv_property, R.id.tv_task_circle}
+                    new int[]{R.id.tv_property, R.id.tv_task_square}
             );
             ListView list = (ListView) view.findViewById(android.R.id.list);
             list.setAdapter(adapter);
@@ -107,7 +120,7 @@ public class ListingsFragment extends ListFragment {
 
     // Fetch new data from the server
     public void updateListings(boolean isSwiped) {
-        String url = Constants.JsonApi.LISTINGS_URL + "employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
+        String url = Constants.JsonApi.LISTINGS_URL + "&employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
         JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray jsonArray) {

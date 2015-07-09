@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.dm7.barcodescanner.zbar.Result;
+import niupiao.com.watchmen_android.Constants;
 import niupiao.com.watchmen_android.utils.VolleySingleton;
 import niupiao.com.watchmen_android.ZBar.ZBarScannerView;
 
@@ -50,8 +51,7 @@ public class QrScannerActivity extends Activity implements ZBarScannerView.Resul
     }
 
     private void sendDataRequest(String qr) {
-        String url = VolleySingleton.BASE_URL; //TODO Remove BASE_URL from VolleySingleton and change this to use Constants.
-        url += "logs/new?format=json";
+        String url = Constants.JsonApi.SCANNER_URL;
         url += "&employee=" + getIntent().getStringExtra("EMPLOYEE");
         url += "&auth=" + getIntent().getStringExtra("AUTH");
         url += "&qr=" + qr;

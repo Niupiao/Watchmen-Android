@@ -13,6 +13,7 @@ public class Constants {
     public final static class JsonApi {
         public static final String BASE_URL = "https://watchmen.herokuapp.com";
         public static final String LOGIN_URL = BASE_URL + "/auth?format=json";
-        public static final String LISTINGS_URL = BASE_URL + "/listings?format=json&";
+        public static final String LISTINGS_URL = BASE_URL + "/listings?format=json";
+        public static final String SCANNER_URL = BASE_URL + "/logs/new?format=json";
     }
 }
