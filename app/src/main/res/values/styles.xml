@@ -28,8 +28,19 @@
     </style>
 
     <style name="Main.TextView.Property">
+        <item name="android:textSize">23sp</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="Main.ImageButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Main.ImageButton.Scanner">
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:src">@drawable/camera_50</item>
     </style>
 </resources>
