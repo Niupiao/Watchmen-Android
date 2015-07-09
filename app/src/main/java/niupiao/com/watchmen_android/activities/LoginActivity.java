@@ -238,7 +238,7 @@ public class LoginActivity extends ActionBarActivity {
 
     private void updateListings(Employee emp, Intent intent){
         // Update Listings with Employee Data
-        String listingsURL = Constants.JsonApi.LISTINGS_URL + "employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
+        String listingsURL = Constants.JsonApi.LISTINGS_URL + "&employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
         ListingsData listings = ListingsData.get(getApplicationContext());
         listings.clear();
         listings.loginAndGetListings(listingsURL, intent, this);

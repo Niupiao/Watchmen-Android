@@ -31,7 +31,6 @@ import niupiao.com.watchmen_android.Constants;
 import niupiao.com.watchmen_android.R;
 import niupiao.com.watchmen_android.activities.QrScannerActivity;
 import niupiao.com.watchmen_android.utils.VolleySingleton;
-import niupiao.com.watchmen_android.adapters.PropertyAdapter;
 import niupiao.com.watchmen_android.models.Employee;
 import niupiao.com.watchmen_android.models.Property;
 import niupiao.com.watchmen_android.utils.ListingsData;
@@ -42,7 +41,6 @@ import niupiao.com.watchmen_android.utils.ListingsData;
 public class ListingsFragment extends ListFragment {
 
     public ArrayList<Property> mProperties;
-    public PropertyAdapter mAdapter;
     private Employee emp;
     private View view;
     private ImageButton mScannerButton;
@@ -93,7 +91,6 @@ public class ListingsFragment extends ListFragment {
         if(mProperties.size() > 0){
             TextView listingsExist = (TextView) view.findViewById(R.id.tv_properties_to_check);
             listingsExist.setText("");
-            mAdapter = new PropertyAdapter(getActivity(), mProperties);
             ArrayList<HashMap<String, String>> propertyMap = generateHashMap(mProperties);
             SimpleAdapter adapter = new SimpleAdapter(
                     getActivity(),

@@ -78,6 +78,7 @@ public class ListingsData {
                     }
                 }
                 activity.startActivity(intent); //Start the next activity.
+                activity.finish();
 
             }
         }, new Response.ErrorListener() {
