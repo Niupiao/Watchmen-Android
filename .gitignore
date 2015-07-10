@@ -6,3 +6,8 @@
 *~
 .idea/
 build/
+
+# Removing person-specific residue files.
+.idea/gradle.xml
+.idea/misc.xml
+app/app.iml

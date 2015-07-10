@@ -49,10 +49,6 @@ public class LoginActivity extends ActionBarActivity {
     private View logo;
     private LinearLayout loader;
 
-    private final String INTENT_KEY_FOR_EMPLOYEE = "employee";
-    private final String INTENT_KEY_FOR_AUTH = "auth";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,12 +195,12 @@ public class LoginActivity extends ActionBarActivity {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Log.d(INTENT_KEY_FOR_AUTH, response.toString());
+                        Log.d(Constants.IntentKeys.INTENT_KEY_FOR_AUTH, response.toString());
                         try {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             Employee employee = login(response);
-                            intent.putExtra(INTENT_KEY_FOR_EMPLOYEE, employee);
-                            intent.putExtra(INTENT_KEY_FOR_AUTH, response.getString("auth"));
+                            intent.putExtra(Constants.IntentKeys.INTENT_KEY_FOR_EMPLOYEE, employee);
+                            intent.putExtra(Constants.IntentKeys.INTENT_KEY_FOR_AUTH, response.getString("auth"));
                             updateListings(employee, intent);
 
                             finish();
@@ -238,7 +234,7 @@ public class LoginActivity extends ActionBarActivity {
 
     private void updateListings(Employee emp, Intent intent){
         // Update Listings with Employee Data
-        String listingsURL = Constants.JsonApi.LISTINGS_URL + "employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
+        String listingsURL = Constants.JsonApi.LISTINGS_URL + "&employee_id=" + emp.getEmployee() + "&auth=" + emp.getAuth();
         ListingsData listings = ListingsData.get(getApplicationContext());
         listings.clear();
         listings.loginAndGetListings(listingsURL, intent, this);
