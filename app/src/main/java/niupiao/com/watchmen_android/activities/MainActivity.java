@@ -13,14 +13,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 
+import niupiao.com.watchmen_android.Constants;
 import niupiao.com.watchmen_android.R;
 import niupiao.com.watchmen_android.fragments.ListingsFragment;
 import niupiao.com.watchmen_android.models.Employee;
 
 
 public class MainActivity extends ActionBarActivity {
-
-    private final String INTENT_KEY_FOR_EMPLOYEE = "employee";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setTitle("Watchmen");
 
         Intent intent = getIntent();
-        Employee emp = intent.getParcelableExtra(INTENT_KEY_FOR_EMPLOYEE);
+        Employee emp = intent.getParcelableExtra(Constants.IntentKeys.INTENT_KEY_FOR_EMPLOYEE);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();

@@ -80,6 +80,8 @@ public class ListingsFragment extends ListFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), QrScannerActivity.class);
+                intent.putExtra(Constants.IntentKeys.INTENT_KEY_FOR_EMPLOYEE, emp.getEmployee() + "");
+                intent.putExtra(Constants.IntentKeys.INTENT_KEY_FOR_AUTH, emp.getAuth());
                 startActivity(intent);
             }
         });
