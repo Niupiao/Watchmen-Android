@@ -1,4 +1,4 @@
-package niupiao.com.watchmen_android;
+package niupiao.com.watchmen_android.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,7 +14,6 @@ import com.android.volley.toolbox.Volley;
  * Created by Ben on 6/28/2015.
  */
 public class VolleySingleton {
-    public static final String BASE_URL = "https://moresi-property-bendrews.c9.io/"; //TODO Remove. Use BASE_URL in Constants
     private static VolleySingleton mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;

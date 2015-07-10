@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -71,37 +72,25 @@ public class ViewFinderView extends View {
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(40 + resources.getInteger(viewfinder_border_width));
 
-        /*canvas.drawLine(mFramingRect.left - 1, mFramingRect.top - 1, mFramingRect.left - 1, mFramingRect.top - 1 + lineLength, paint);
-        canvas.drawLine(mFramingRect.left - 1, mFramingRect.top - 1, mFramingRect.left - 1 + lineLength, mFramingRect.top - 1, paint);
-
-        canvas.drawLine(mFramingRect.left - 1, mFramingRect.bottom + 1, mFramingRect.left - 1, mFramingRect.bottom + 1 - lineLength, paint);
-        canvas.drawLine(mFramingRect.left - 1, mFramingRect.bottom + 1, mFramingRect.left - 1 + lineLength, mFramingRect.bottom + 1, paint);
-
-        canvas.drawLine(mFramingRect.right + 1, mFramingRect.top - 1, mFramingRect.right + 1, mFramingRect.top - 1 + lineLength, paint);
-        canvas.drawLine(mFramingRect.right + 1, mFramingRect.top - 1, mFramingRect.right + 1 - lineLength, mFramingRect.top - 1, paint);
-
-        canvas.drawLine(mFramingRect.right + 1, mFramingRect.bottom + 1, mFramingRect.right + 1, mFramingRect.bottom + 1 - lineLength, paint);
-        canvas.drawLine(mFramingRect.right + 1, mFramingRect.bottom + 1, mFramingRect.right + 1 - lineLength, mFramingRect.bottom + 1, paint);*/
-
         //Top Left
-        canvas.drawRect(mFramingRect.left, mFramingRect.top, mFramingRect.left + 75, mFramingRect.top + 250, paint);
+        canvas.drawRect(mFramingRect.left, mFramingRect.top + 75, mFramingRect.left + 75, mFramingRect.top + 250, paint);
         canvas.drawRect(mFramingRect.left + 75, mFramingRect.top, mFramingRect.left + 250, mFramingRect.top + 75, paint);
-        //canvas.drawArc(mFramingRect.left, mFramingRect.top, mFramingRect.left + 150, mFramingRect.top + 150, 180, 90, true, paint);
+        canvas.drawArc(new RectF(mFramingRect.left, mFramingRect.top, mFramingRect.left + 150, mFramingRect.top + 150), 180, 90, true, paint);
 
         //Top Right
-        canvas.drawRect(mFramingRect.right - 75, mFramingRect.top, mFramingRect.right, mFramingRect.top + 250, paint);
+        canvas.drawRect(mFramingRect.right - 75, mFramingRect.top + 75, mFramingRect.right, mFramingRect.top + 250, paint);
         canvas.drawRect(mFramingRect.right - 250, mFramingRect.top, mFramingRect.right - 75, mFramingRect.top + 75, paint);
-        //canvas.drawArc(mFramingRect.right - 150, mFramingRect.top, mFramingRect.right, mFramingRect.top + 150, 270, 90, true, paint);
+        canvas.drawArc(new RectF(mFramingRect.right - 150, mFramingRect.top, mFramingRect.right, mFramingRect.top + 150), 270, 90, true, paint);
 
         //Bottom Left
-        canvas.drawRect(mFramingRect.left, mFramingRect.bottom - 250, mFramingRect.left + 75, mFramingRect.bottom, paint);
+        canvas.drawRect(mFramingRect.left, mFramingRect.bottom - 250, mFramingRect.left + 75, mFramingRect.bottom - 75, paint);
         canvas.drawRect(mFramingRect.left + 75, mFramingRect.bottom - 75, mFramingRect.left + 250, mFramingRect.bottom, paint);
-        //canvas.drawArc(mFramingRect.left, mFramingRect.bottom - 150, mFramingRect.left + 150, mFramingRect.bottom, 90, 90, true, paint);
+        canvas.drawArc(new RectF(mFramingRect.left, mFramingRect.bottom - 150, mFramingRect.left + 150, mFramingRect.bottom), 90, 90, true, paint);
 
         //Bottom Right
-        canvas.drawRect(mFramingRect.right - 75, mFramingRect.bottom - 250, mFramingRect.right, mFramingRect.bottom, paint);
+        canvas.drawRect(mFramingRect.right - 75, mFramingRect.bottom - 250, mFramingRect.right, mFramingRect.bottom - 75, paint);
         canvas.drawRect(mFramingRect.right - 250, mFramingRect.bottom - 75, mFramingRect.right - 75, mFramingRect.bottom , paint);
-        //canvas.drawArc(mFramingRect.right - 150, mFramingRect.bottom - 150, mFramingRect.right, mFramingRect.bottom, 0, 90, true, paint);
+        canvas.drawArc(new RectF(mFramingRect.right - 150, mFramingRect.bottom - 150, mFramingRect.right, mFramingRect.bottom), 0, 90, true, paint);
     }
 
     @Override
